@@ -1,0 +1,10 @@
+{
+    "name": "NukeLib",
+    "author": "end_4",
+    "version_number": "0.1.0",
+    "website_url": "https://github.com/end-4/ultrakill-nukelib",
+    "description": "eNd_4's UltraKill Library",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}
