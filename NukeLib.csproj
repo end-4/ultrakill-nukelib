@@ -38,6 +38,12 @@
       <Reference Include="UnityEngine.ImageConversionModule">
         <HintPath>libs\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>libs\Managed\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>libs\Managed\UnityEngine.UIModule.dll</HintPath>
+      </Reference>
       <Reference Include="UnityEngine.UnityWebRequestModule">
         <HintPath>libs\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
       </Reference>

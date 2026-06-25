@@ -3,7 +3,7 @@ param(
     [string]$UltrakillPath = "C:\Program Files (x86)\Steam\steamapps\common\ULTRAKILL",
 
     [Parameter(Mandatory=$false)]
-    [string]$R2ModmanProfilePath = "$env:APPDATA\r2modmanPlus-local\ULTRAKILL\profiles\Default"
+    [string]$R2ModmanProfilePath = "$env:APPDATA\com.kesomannen.gale\ultrakill\profiles\Default"
 )
 
 Set-StrictMode -Version Latest
@@ -36,6 +36,8 @@ $ukDlls = @(
     "UnityEngine.AssetBundleModule.dll"
     "UnityEngine.ImageConversionModule.dll"
     "UnityEngine.CoreModule.dll"
+    "UnityEngine.UI.dll"
+    "UnityEngine.UIModule.dll"
     "UnityEngine.UnityWebRequestModule.dll"
     "UnityEngine.UnityWebRequestTextureModule.dll"
 )
