@@ -11,7 +11,7 @@ public static class UIUtils {
     /// <param name="baseObject">The base object for the path</param>
     /// <param name="path">The object path going from the base object</param>
     /// <returns></returns>
-    public static GameObject FindRecursive(GameObject baseObject, string path) {
+    public static GameObject FindRecursive(this GameObject baseObject, string path) {
         Transform t = baseObject.transform;
         string[] pathItems = path.Split("/");
         for (int i = 0; i < pathItems.Length; i++) {
