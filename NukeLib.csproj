@@ -5,6 +5,11 @@
         <LangVersion>Latest</LangVersion>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <DebugType>embedded</DebugType>
+        <Deterministic>true</Deterministic>
+        <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))</RepoRoot>
+        <PathMap>$(RepoRoot)=/_/</PathMap>
     </PropertyGroup>
 
     <ItemGroup>
