@@ -44,16 +44,20 @@ public class SlideFadeToggleEffect : MonoBehaviour {
 
     private Vector2 hiddenPos => originalPos + hiddenOffset;
 
+    private void Set2DLocalPosition(Vector2 newPos) {
+        rect.localPosition = new Vector3(newPos.x, newPos.y, rect.localPosition.z);
+    }
+
     private void Initialize() {
         if ((Object)(object)rect == (Object)null) rect = ((Component)this).GetComponent<RectTransform>();
         if ((Object?)(object?)canvasGroup == (Object?)null) canvasGroup = ((Component)this).GetComponent<CanvasGroup>();
 
         originalAlpha = canvasGroup?.alpha ?? 1;
-        originalPos = rect.anchoredPosition;
+        originalPos = rect.localPosition;
     }
 
     private void OnEnable() {
-        rect.anchoredPosition = hiddenPos;
+        Set2DLocalPosition(hiddenPos);
         if (canvasGroup != null) canvasGroup.alpha = hiddenAlpha;
         currentState = State.Entering;
     }
@@ -78,7 +82,7 @@ public class SlideFadeToggleEffect : MonoBehaviour {
         Vector2 targetPos = entering ? originalPos : hiddenPos;
         float targetAlpha = entering ? originalAlpha : hiddenAlpha;
 
-        Vector2 currentPos = rect.anchoredPosition;
+        Vector2 currentPos = rect.localPosition;
         float currentAlpha = canvasGroup?.alpha ?? 1;
 
         float moveStep;
@@ -98,18 +102,48 @@ public class SlideFadeToggleEffect : MonoBehaviour {
         }
 
         // Apply movement
-        rect.anchoredPosition = Vector2.MoveTowards(currentPos, targetPos, moveStep);
+        Set2DLocalPosition(Vector2.MoveTowards(currentPos, targetPos, moveStep));
         if (canvasGroup != null) {
             canvasGroup.alpha = Mathf.MoveTowards(currentAlpha, targetAlpha, alphaStep);
         }
 
         // Check Completion
-        if (rect.anchoredPosition == targetPos &&
+        if ((Vector2)rect.localPosition == targetPos &&
             (canvasGroup == null || Mathf.Approximately(canvasGroup.alpha, targetAlpha))) {
             State finishedState = currentState;
             currentState = State.Idle;
             currentExitSpeed = 0f;
             if (finishedState == State.Exiting) OnExitComplete?.Invoke();
+        }
+    }
+}
+
+/// <summary>
+/// Extensions to work with SlideFadeToggleEffect more easily
+/// </summary>
+public static class SlideFadeToggleEffectExtensions {
+    /// <summary>
+    /// Sets object's activeness and animate if available
+    /// </summary>
+    /// <param name="gameObject">The target game object</param>
+    /// <param name="value">Whether to show or hide</param>
+    /// <param name="hiddenOffset">How much to shift when the GameObject is hidden</param>
+    /// <param name="speed">The speed of the hiding/showing animation</param>
+    public static void SetActiveAnimated(this GameObject gameObject, bool value, Vector2 hiddenOffset, float speed = 25f) {
+        SlideFadeToggleEffect toggleEffect = gameObject.GetComponent<SlideFadeToggleEffect>();
+        if (toggleEffect == null) {
+            toggleEffect = gameObject.AddComponent<SlideFadeToggleEffect>();
+            toggleEffect.hiddenOffset = hiddenOffset;
+            toggleEffect.speed = speed;
+            toggleEffect.OnExitComplete += () => { gameObject.SetActive(false); };
+        }
+
+        if (!gameObject.activeSelf) {
+            gameObject.SetActive(true);
+        } else if (toggleEffect != null) {
+            toggleEffect.StartExit();
+        } else {
+            gameObject.SetActive(false);
         }
     }
 }
