@@ -1,6 +1,7 @@
 ## 0.3.0
 
 - Added GameObject.SetActiveAnimated extension for easier UI panel animation
+- Added some small image processing and color utilities
 
 ## 0.2.0
 
