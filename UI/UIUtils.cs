@@ -43,7 +43,7 @@ public static class UIUtils {
         GameObject baseObject = SceneManager.GetActiveScene().GetRootGameObjects()
             .Where(obj => obj.name == firstItem).FirstOrDefault();
         if (baseObject == null) {
-            Plugin.Log.LogWarning($"Root item {firstItem} not found for object path {baseObject.name}/{path}");
+            Plugin.Log.LogWarning($"Root item not found for object path {path}");
             return null;
         }
         return FindRecursive(baseObject, restPath);
