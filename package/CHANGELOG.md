@@ -1,3 +1,7 @@
+## 0.4.0
+
+- Make ImageUtils work with audio files by using their cover
+
 ## 0.3.0
 
 - Added GameObject.SetActiveAnimated extension for easier UI panel animation
