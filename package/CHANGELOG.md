@@ -1,6 +1,5 @@
 ## 0.4.0
 
-- Make ImageUtils work with audio files by using their cover
 - Added an util to disable leaderboards
 
 ## 0.3.0
