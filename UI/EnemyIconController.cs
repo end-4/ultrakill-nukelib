@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GameConsole.pcon;
 using NukeLib.Text;
 using UnityEngine;
@@ -10,8 +11,27 @@ namespace NukeLib.UI;
 
 public class EnemyIconController : MonoBehaviour {
     private static bool iconsLoaded = false;
+    private static bool vanillaIconsLoaded = false;
     private static readonly string BundlePath = Path.Combine(Plugin.workingDir, "assets", "nukelib_enemies.bundle");
     private static string DEFAULT_ICON = "default";
+    /// <summary>
+    /// The icons style
+    /// </summary>
+    public IconStyle style = IconStyle.Simple;
+
+    /// <summary>
+    /// Icon style options
+    /// </summary>
+    public enum IconStyle {
+        /// <summary>
+        /// Clean vector style optimized for viewing at small scale
+        /// </summary>
+        Simple,
+        /// <summary>
+        /// Literal screenshot style used in vanilla spawner arm menu
+        /// </summary>
+        Vanilla
+    };
 
     private static string[] IconNames = {
         "default",
@@ -58,8 +78,9 @@ public class EnemyIconController : MonoBehaviour {
     };
 
     private static Dictionary<string, Sprite> EnemyIcons = new();
+    private static IEnumerable<SpawnableObject> vanillaEnemies;
 
-    private void LoadIcons() {
+    private static void LoadSimpleIcons() {
         AssetBundle bundle = AssetBundle.LoadFromFile(BundlePath);
         // Load icons
         for (int i = 0; i < IconNames.Length; i++) {
@@ -71,13 +92,19 @@ public class EnemyIconController : MonoBehaviour {
         bundle.Unload(false);
     }
 
+    private static void LoadVanillaIcons() {
+        vanillaEnemies = Resources.FindObjectsOfTypeAll<SpawnableObjectsDatabase>().SelectMany(db => db.enemies);
+    }
 
     public EnemyIdentifier enemyIdentifier;
 
     private void Awake() {
-        if (!iconsLoaded) {
-            LoadIcons();
+        if (style == IconStyle.Simple && !iconsLoaded) {
+            LoadSimpleIcons();
             iconsLoaded = true;
+        } else if (style == IconStyle.Vanilla && !vanillaIconsLoaded) {
+            LoadVanillaIcons();
+            vanillaIconsLoaded = vanillaEnemies.Count() > 0;
         }
     }
 
@@ -86,6 +113,14 @@ public class EnemyIconController : MonoBehaviour {
     }
 
     private void SetEnemyIcon(EnemyIdentifier enemyIdentifier) {
+        // Vanilla icons
+        if (style == IconStyle.Vanilla) {
+            this.gameObject.GetComponent<Image>().sprite = vanillaEnemies.FirstOrDefault(spawnable =>
+                spawnable.gameObject.GetComponentInChildren<EnemyIdentifier>(true)?.FullName ==
+                enemyIdentifier.FullName)?.gridIcon;
+            return;
+        }
+        // Custom icons
         string enemyTypeId = enemyIdentifier.enemyType.ToString();
         string iconName = DEFAULT_ICON;
         string potentialIconName = TextUtils.ToSnakeCase(enemyTypeId);

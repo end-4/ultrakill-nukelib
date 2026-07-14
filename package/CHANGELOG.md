@@ -1,3 +1,10 @@
+## 0.5.0
+
+- Added vanilla icons for EnemyIconController (mostly for Taberry)
+- Adjusted enemy icons for better readability (mostly for Taberry)
+- Added Pauser (for Thorn)
+- Added text wrapping util, UnfuckLayoutHack extension (for Thorn)
+
 ## 0.4.0
 
 - Added an util to disable leaderboards (for Thorn)

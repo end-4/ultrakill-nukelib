@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace NukeLib.UI;
 
@@ -47,5 +48,13 @@ public static class UIUtils {
             return null;
         }
         return FindRecursive(baseObject, restPath);
+    }
+
+    /// <summary>
+    /// Forces layouts to update
+    /// </summary>
+    /// <param name="uiObject">The GameObject to update</param>
+    public static void UnfuckLayoutHack(this GameObject uiObject) {
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)uiObject.transform);
     }
 }

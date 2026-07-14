@@ -1,4 +1,4 @@
-﻿namespace NukeLib.Scores;
+﻿namespace NukeLib.Game.Scores;
 
 /// <summary>
 /// Stuff related to the leaderboard
