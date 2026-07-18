@@ -1,3 +1,10 @@
+## 0.6.0
+
+- Added extension to check whether a KeyCode is modifier
+- Reorganized namespaces: utilities are now in `Utils`. The old namespaces will stay for a release to avoid breaking changes.
+- Added Color::GetValues
+- Added KeyUtils::IsModifier
+
 ## 0.5.0
 
 - Added vanilla icons for EnemyIconController (mostly for Taberry)

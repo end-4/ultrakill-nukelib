@@ -1,13 +1,11 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace NukeLib.Assets;
+namespace NukeLib.Utils;
 
-[Obsolete]
-public static class FileAssetHelper {
+public static class FileAssetUtils {
     /// <summary>
     /// Creates a sprite from an image file
     /// </summary>
@@ -15,7 +13,6 @@ public static class FileAssetHelper {
     /// <param name="pixelsPerUnit"></param>
     /// <param name="spriteType"></param>
     /// <returns>The new sprite</returns>
-    [Obsolete]
     public static Sprite LoadNewSprite(string filePath, float pixelsPerUnit = 100.0f,
         SpriteMeshType spriteType = SpriteMeshType.Tight) {
         // Load a PNG or JPG image from disk to a Texture2D, assign this texture to a new sprite and return its reference
@@ -34,7 +31,6 @@ public static class FileAssetHelper {
     /// <param name="pixelsPerUnit"></param>
     /// <param name="spriteType"></param>
     /// <returns>The new sprite</returns>
-    [Obsolete]
     public static Sprite ConvertTextureToSprite(Texture2D texture, float pixelsPerUnit = 100.0f,
         SpriteMeshType spriteType = SpriteMeshType.Tight) {
         // Converts a Texture2D to a sprite, assign this texture to a new sprite and return its reference
@@ -50,7 +46,6 @@ public static class FileAssetHelper {
     /// </summary>
     /// <param name="FilePath">Path to image file</param>
     /// <returns></returns>
-    [Obsolete]
     public static Texture2D LoadTexture(string FilePath) {
         // Load a PNG or JPG file from disk to a Texture2D
         // Returns null if load fails
@@ -72,7 +67,6 @@ public static class FileAssetHelper {
     /// </summary>
     /// <param name="filePath">Path to image file</param>
     /// <returns>the texture</returns>
-    [Obsolete]
     public static async Task<Texture2D> LoadTextureAsync(string filePath) {
         if (!File.Exists(filePath)) return null;
 

@@ -15,7 +15,7 @@ public class Plugin : BaseUnityPlugin {
     public static string workingDir = Path.GetDirectoryName(workingPath);
     public const string PluginGUID = "com.github.end-4.nukeLib";
     public const string PluginName = "NukeLib";
-    public const string PluginVersion = "0.5.0";
+    public const string PluginVersion = "0.6.0";
 
     private void Awake() {
         Log = Logger;

@@ -4,12 +4,11 @@ using System.IO;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace NukeLib.ImageUtils;
+namespace NukeLib.Utils;
 
 /// <summary>
 /// Helper for some image processing stuff
 /// </summary>
-[Obsolete]
 public static class ImageUtils {
     /// <summary>
     /// Supported file extensions
@@ -30,7 +29,6 @@ public static class ImageUtils {
     /// Gets or sets the maximum number of items the dominant color cache can hold.
     /// Defaults to 1000. Set to 0 to disable caching.
     /// </summary>
-    [Obsolete]
     public static int MaxCacheSize {
         get => _maxCacheSize;
         set {
@@ -42,7 +40,6 @@ public static class ImageUtils {
     /// <summary>
     /// Clears the dominant color cache.
     /// </summary>
-    [Obsolete]
     public static void ClearCache() {
         _cacheDict.Clear();
         _lruList.Clear();
@@ -93,7 +90,6 @@ public static class ImageUtils {
     /// </summary>
     /// <param name="sourceTexture">The image to grab dominant color from</param>
     /// <returns>The dominant color</returns>
-    [Obsolete]
     public static Color GetDominantColor(Texture2D sourceTexture) {
         RenderTexture rt = RenderTexture.GetTemporary(1, 1, 0, RenderTextureFormat.ARGB32);
 
@@ -121,7 +117,6 @@ public static class ImageUtils {
     /// </summary>
     /// <param name="filePath">Path to image file</param>
     /// <returns>The dominant color</returns>
-    [Obsolete]
     public static Color GetDominantColor(string filePath) {
         if (TryGetFromCache(filePath, out Color cachedColor)) {
             return cachedColor;
@@ -154,7 +149,6 @@ public static class ImageUtils {
     /// <param name="targetColor">The color to match</param>
     /// <param name="directoryPath">The directory containing the images</param>
     /// <returns>The path of the closest image file, or string.Empty if none found</returns>
-    [Obsolete]
     public static string FindClosestColorImage(Color targetColor, string directoryPath) {
         if (!Directory.Exists(directoryPath)) {
             return string.Empty;

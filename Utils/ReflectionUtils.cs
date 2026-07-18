@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Reflection;
 
-namespace NukeLib.Reflection;
+namespace NukeLib.Utils;
 
-[Obsolete]
 public static class ReflectionUtils {
     /// <summary>
     /// Gets a private field
@@ -13,7 +12,6 @@ public static class ReflectionUtils {
     /// <typeparam name="T">Type of The field to get</typeparam>
     /// <returns></returns>
     /// <exception cref="ArgumentException">When The field doesn't exist</exception>
-    [Obsolete]
     public static T GetPrivate<T>(this object obj, string fieldName) {
         Type t = obj.GetType();
         var bindingAttr = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -32,7 +30,6 @@ public static class ReflectionUtils {
     /// <param name="value">The value to set</param>
     /// <typeparam name="T">The type of the field</typeparam>
     /// <exception cref="ArgumentException">When the field doesn't exist</exception>
-    [Obsolete]
     public static void SetPrivate<T>(this object obj, string fieldName, T value) {
         Type t = obj.GetType();
         var bindingAttr = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -52,7 +49,6 @@ public static class ReflectionUtils {
     /// <typeparam name="T">The expected return type of the method</typeparam>
     /// <returns>The return value of the invoked method</returns>
     /// <exception cref="ArgumentException">When the method doesn't exist</exception>
-    [Obsolete]
     public static T InvokePrivate<T>(this object obj, string methodName, params object[] parameters)
     {
         Type t = obj.GetType();
@@ -72,7 +68,6 @@ public static class ReflectionUtils {
     /// <param name="methodName">The method's name</param>
     /// <param name="parameters">The parameters to pass to the method</param>
     /// <exception cref="ArgumentException">When the method doesn't exist</exception>
-    [Obsolete]
     public static void InvokePrivate(this object obj, string methodName, params object[] parameters)
     {
         Type t = obj.GetType();

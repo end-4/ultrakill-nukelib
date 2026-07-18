@@ -1,16 +1,14 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace NukeLib.Debug;
+namespace NukeLib.Utils;
 
 /// <summary>
 /// Class for convenient printing
 /// </summary>
-[Obsolete]
-public static class PrintUtils {
+public static class DebugUtils {
     /// <summary>
     /// Turns array into a string of all elements
     /// </summary>
@@ -20,7 +18,6 @@ public static class PrintUtils {
     /// <param name="suffix">The string to put at the back of the string</param>
     /// <typeparam name="T">Type of the array</typeparam>
     /// <returns>The string representation of all array elements</returns>
-    [Obsolete]
     public static string Stringify<T>(this T[] array, string delimiter = ", ", string prefix = "[", string suffix = "]") {
         string result = prefix;
         for (int i = 0; i < array.Length; i++) {
