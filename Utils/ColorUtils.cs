@@ -35,4 +35,12 @@ public static class ColorUtils {
     public static float[] GetValues(this Color color) {
         return [color.r, color.g, color.b, color.a];
     }
+
+    private static readonly float MeaningfulColorDiffThreshold = 0.0039f;
+    public static bool Approximately(this Color color, Color other) {
+        return Mathf.Abs(color.r - other.r) < MeaningfulColorDiffThreshold
+            && Mathf.Abs(color.g - other.g) < MeaningfulColorDiffThreshold
+            && Mathf.Abs(color.b - other.b) < MeaningfulColorDiffThreshold
+            && Mathf.Abs(color.a - other.a) < MeaningfulColorDiffThreshold;
+    }
 }

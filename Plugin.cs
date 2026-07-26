@@ -2,6 +2,7 @@
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
+using HarmonyLib;
 
 namespace NukeLib;
 
@@ -19,5 +20,8 @@ public class Plugin : BaseUnityPlugin {
 
     private void Awake() {
         Log = Logger;
+
+        Harmony harmony = new Harmony(PluginGUID);
+        harmony.PatchAll();
     }
 }

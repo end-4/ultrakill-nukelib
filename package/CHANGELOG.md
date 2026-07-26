@@ -2,8 +2,11 @@
 
 - Added extension to check whether a KeyCode is modifier
 - Reorganized namespaces: utilities are now in `Utils`. The old namespaces will stay for a release to avoid breaking changes.
-- Added Color::GetValues
-- Added KeyUtils::IsModifier
+- Added Color.GetValues, Color.Approximately
+- Added KeyUtils.IsModifier
+- Allow EnemyIconController to take an EnemyType
+- Added optional warnings and null-annotated UIUtils.FindRecursive
+- Added parry event listening
 
 ## 0.5.0
 

@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 namespace NukeLib.UI;
 
+/// <summary>
+/// A component for setting the enemy icon
+/// </summary>
 public class EnemyIconController : MonoBehaviour {
     private static bool iconsLoaded = false;
     private static bool vanillaIconsLoaded = false;
@@ -97,6 +100,7 @@ public class EnemyIconController : MonoBehaviour {
     }
 
     public EnemyIdentifier enemyIdentifier;
+    public EnemyType enemyType;
 
     private void Awake() {
         if (style == IconStyle.Simple && !iconsLoaded) {
@@ -109,24 +113,26 @@ public class EnemyIconController : MonoBehaviour {
     }
 
     private void Start() {
-        SetEnemyIcon(enemyIdentifier);
+        SetEnemyIcon();
     }
 
-    private void SetEnemyIcon(EnemyIdentifier enemyIdentifier) {
+    private void SetEnemyIcon() {
         // Vanilla icons
         if (style == IconStyle.Vanilla) {
-            this.gameObject.GetComponent<Image>().sprite = vanillaEnemies.FirstOrDefault(spawnable =>
-                spawnable.gameObject.GetComponentInChildren<EnemyIdentifier>(true)?.FullName ==
-                enemyIdentifier.FullName)?.gridIcon;
+            this.gameObject.GetComponent<Image>().sprite = vanillaEnemies.FirstOrDefault(spawnable => {
+                var vanillaEid = spawnable.gameObject.GetComponentInChildren<EnemyIdentifier>(true);
+                if (enemyIdentifier != null) return vanillaEid?.FullName == enemyIdentifier.FullName;
+                return vanillaEid.enemyType == enemyType;
+            })?.gridIcon;
             return;
         }
         // Custom icons
-        string enemyTypeId = enemyIdentifier.enemyType.ToString();
+        string enemyTypeId = (enemyIdentifier != null) ? enemyIdentifier.enemyType.ToString() : enemyType.ToString();
         string iconName = DEFAULT_ICON;
-        string potentialIconName = TextUtils.ToSnakeCase(enemyTypeId);
+        string potentialIconName = enemyTypeId.ToSnakeCase();
         if (EnemyIcons.ContainsKey(potentialIconName)) {
             iconName = potentialIconName;
-        } else {
+        } else if (enemyIdentifier != null) {
             string fullNameLower = enemyIdentifier.FullName.ToLower();
             // Plugin.Log.LogInfo($"full name {fullName}");
             if (fullNameLower == "earthmover mortar") potentialIconName = "centaur_mortar";
