@@ -7,6 +7,7 @@
 - Allow EnemyIconController to take an EnemyType
 - Added optional warnings and null-annotated UIUtils.FindRecursive
 - Added parry event listening
+- Added a simple fuzzy search implementation
 
 ## 0.5.0
 
