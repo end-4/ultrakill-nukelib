@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -20,30 +21,50 @@ public static class TextUtils {
     /// <param name="lineLength">Max characters per line</param>
     /// <returns>The wrapped text</returns>
     public static string WrapText(this string text, int lineLength) {
-        // Split by spaces to get individual words
-        string[] words = text.Split(' ');
+        if (string.IsNullOrEmpty(text) || lineLength <= 0)
+            return text;
+
+        // Split by newline
+        string[] rawLines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         StringBuilder result = new StringBuilder();
-        StringBuilder currentLine = new StringBuilder();
 
-        foreach (string word in words) {
-            // If adding this word exceeds the limit
-            if (currentLine.Length + word.Length > lineLength) {
-                // If the current line is empty, it means a single word is longer than lineLength
-                if (currentLine.Length == 0) {
-                    result.AppendLine(word);
-                } else {
-                    result.AppendLine(currentLine.ToString().TrimEnd());
-                    currentLine.Clear();
-                    currentLine.Append(word).Append(" ");
+        for (int l = 0; l < rawLines.Length; l++) {
+            string line = rawLines[l];
+            string[] tokens = Regex.Split(line, @"(\s+)");
+
+            StringBuilder currentLine = new StringBuilder();
+
+            foreach (string token in tokens) {
+                if (string.IsNullOrEmpty(token)) continue;
+
+                if (currentLine.Length + token.Length > lineLength) {
+                    if (currentLine.Length > 0) {
+                        result.AppendLine(currentLine.ToString().TrimEnd());
+                        currentLine.Clear();
+
+                        // Skip leading whitespace
+                        if (char.IsWhiteSpace(token[0])) continue;
+                    }
+
+                    // Longer than lineLength -> just add it
+                    if (token.Length >= lineLength) {
+                        result.AppendLine(token);
+                        continue;
+                    }
                 }
-            } else {
-                currentLine.Append(word).Append(" ");
-            }
-        }
 
-        // Add any remaining text
-        if (currentLine.Length > 0) {
-            result.Append(currentLine.ToString().TrimEnd());
+                currentLine.Append(token);
+            }
+
+            // Last line
+            if (currentLine.Length > 0) {
+                result.Append(currentLine.ToString().TrimEnd());
+            }
+
+            // Reconstruct lines
+            if (l < rawLines.Length - 1) {
+                result.AppendLine();
+            }
         }
 
         return result.ToString();
