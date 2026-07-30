@@ -21,6 +21,7 @@ public static class Pauser {
             pauseState.priority = 69; // heeheeha
             GameStateManager.Instance.RegisterState(pauseState);
             Time.timeScale = 0f;
+            if (GunControl.Instance != null) GunControl.Instance.activated = false;
         } else {
             GameStateManager.Instance.PopState(pauseKey);
             // Edge case: un-pausing on title screen is very weird
@@ -28,6 +29,7 @@ public static class Pauser {
                 // We rely on OptionsManager because it handles time scale more correctly than just setting to 1. I think.
                 // And some subtleties I couldn't figure out
                 OptionsManager.Instance?.UnPause();
+                // if (GunControl.Instance != null) GunControl.Instance.activated = false;
             }
         }
     }
