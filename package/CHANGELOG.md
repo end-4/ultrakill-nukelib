@@ -1,6 +1,6 @@
 ## 0.6.0
 
-- Added extension to check whether a KeyCode is modifier
+- Added extension KeyCode.IsModifier
 - Reorganized namespaces: utilities are now in `Utils`. The old namespaces will stay for a release to avoid breaking changes.
 - Added Color.GetValues, Color.Approximately
 - Added KeyUtils.IsModifier
@@ -8,6 +8,7 @@
 - Added optional warnings and null-annotated UIUtils.FindRecursive
 - Added parry event listening
 - Added a simple fuzzy search implementation
+- Added ColorUtils.GetWeaponVariantColor, ColorUtils.GetContrastedColor
 
 ## 0.5.0
 

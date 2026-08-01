@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace NukeLib.Utils;
 
@@ -11,7 +12,7 @@ public static class ColorUtils {
     /// Use this as a value to inform adjustments, rather than a concrete lightness value.
     /// </summary>
     /// <param name="color">The color</param>
-    /// <returns>The lightness</returns>
+    /// <returns>The lightness in range [0, 1]</returns>
     public static float PerceivedLightness(this Color color) {
         // https://www.w3.org/TR/AERT/#color-contrast
         return (0.299f * color.r + 0.587f * color.g + 0.114f * color.b);
@@ -21,8 +22,8 @@ public static class ColorUtils {
     /// Makes the color (semi) transparent
     /// </summary>
     /// <param name="color">The color</param>
-    /// <param name="value">How much to transparentize. 0 = original, 1 = fully transparent</param>
-    /// <returns></returns>
+    /// <param name="value">How much to transparentize. 0 = original, 1 = fully transparent. Default = 1.</param>
+    /// <returns>The transparentized color</returns>
     public static Color Transparentize(this Color color, float value = 1) {
         return new Color(color.r, color.g, color.b, color.a * (1 - value));
     }
@@ -37,10 +38,48 @@ public static class ColorUtils {
     }
 
     private static readonly float MeaningfulColorDiffThreshold = 0.0039f;
+
+    /// <summary>
+    /// Check if two colors are the same in hex (#RRGGBBAA) representation
+    /// </summary>
+    /// <param name="color">First color</param>
+    /// <param name="other">Second color</param>
+    /// <returns>true if they're the same color in , false otherwise</returns>
     public static bool Approximately(this Color color, Color other) {
         return Mathf.Abs(color.r - other.r) < MeaningfulColorDiffThreshold
-            && Mathf.Abs(color.g - other.g) < MeaningfulColorDiffThreshold
-            && Mathf.Abs(color.b - other.b) < MeaningfulColorDiffThreshold
-            && Mathf.Abs(color.a - other.a) < MeaningfulColorDiffThreshold;
+               && Mathf.Abs(color.g - other.g) < MeaningfulColorDiffThreshold
+               && Mathf.Abs(color.b - other.b) < MeaningfulColorDiffThreshold
+               && Mathf.Abs(color.a - other.a) < MeaningfulColorDiffThreshold;
+    }
+
+    /// <summary>
+    /// Gets the game's color of a weapon variant. 0 = Blue, 1 = Green, 2 = Red, 3 = Gold
+    /// </summary>
+    /// <param name="variantIndex">The variant number</param>
+    /// <returns>The color for the variant</returns>
+    public static Color GetWeaponVariantColor(int variantIndex) {
+        var cols = ColorBlindSettings.Instance?.variationColors;
+        return cols == null ? Color.white : cols[variantIndex];
+    }
+
+    /// <summary>
+    /// Gets a color that is safe to be overlaid on the base color
+    /// </summary>
+    /// <param name="color">The base color</param>
+    /// <returns>The safe color for overlaying</returns>
+    public static Color GetContrastedColor(this Color color) {
+        var lightness = color.PerceivedLightness();
+        // if (lightness > 0.6) {
+        //     var ratio = 0.1f / Math.Max(color.r, Math.Max(color.g, color.b));
+        //     return color * ratio;
+        // } else if (lightness > 0.5) {
+        //     return Color.black;
+        // } else if (lightness > 0.4) {
+        //     return Color.white;
+        // } else {
+        //     var ratio = 0.9f / Math.Min(color.r, Math.Min(color.g, color.b));
+        //     return color * ratio;
+        // }
+        return lightness > 0.5 ? Color.black : Color.white;
     }
 }
