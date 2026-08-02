@@ -9,6 +9,7 @@
 - Added parry event listening
 - Added a simple fuzzy search implementation
 - Added ColorUtils.GetWeaponVariantColor, ColorUtils.GetContrastedColor
+- Added UIUtils.SetMaterialRecursive and UIUtils.SetLayerRecursive
 
 ## 0.5.0
 

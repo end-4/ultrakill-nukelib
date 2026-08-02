@@ -48,6 +48,7 @@ public static class UIUtils {
             Plugin.Log.LogWarning($"Root item not found for object path {path}");
             return null;
         }
+
         return FindRecursive(baseObject, restPath);
     }
 
@@ -57,6 +58,33 @@ public static class UIUtils {
     /// <param name="uiObject">The GameObject to update</param>
     public static void UnfuckLayoutHack(this GameObject uiObject) {
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)uiObject.transform);
+    }
+
+    /// <summary>
+    /// Sets the layer for a GameObject and its descendants
+    /// </summary>
+    /// <param name="obj">The target GameObject</param>
+    /// <param name="newLayer">The layer to set</param>
+    public static void SetLayerRecursive(this GameObject obj, int newLayer) {
+        if (obj == null) return;
+        obj.layer = newLayer;
+
+        foreach (Transform child in obj.transform) {
+            SetLayerRecursive(child.gameObject, newLayer);
+        }
+    }
+
+    /// <summary>
+    /// Sets the specified material on all Image components attached to this GameObject and its descendants.
+    /// </summary>
+    /// <param name="obj">The target GameObject</param>
+    /// <param name="material">The material to assign</param>
+    public static void SetMaterialRecursive(this GameObject obj, Material material) {
+        if (obj == null) return;
+        Image[] images = obj.GetComponentsInChildren<Image>(includeInactive: true);
+        foreach (Image img in images) {
+            img.material = material;
+        }
     }
 
     // NEW WARNING PARAM VARIANT AS OVERLOAD TO AVOID BREAKAGE
@@ -104,6 +132,7 @@ public static class UIUtils {
             Plugin.Log.LogWarning($"Root item not found for object path {path}");
             return null;
         }
+
         return FindRecursive(baseObject, restPath, warnings: warnings);
     }
 }
