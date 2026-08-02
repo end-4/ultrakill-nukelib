@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -79,11 +80,24 @@ public static class UIUtils {
     /// </summary>
     /// <param name="obj">The target GameObject</param>
     /// <param name="material">The material to assign</param>
-    public static void SetMaterialRecursive(this GameObject obj, Material material) {
+    public static void SetImageMaterialRecursive(this GameObject obj, Material material) {
         if (obj == null) return;
         Image[] images = obj.GetComponentsInChildren<Image>(includeInactive: true);
         foreach (Image img in images) {
             img.material = material;
+        }
+    }
+
+    /// <summary>
+    /// Sets the specified material on all TextMeshProUGUI components attached to this GameObject and its descendants.
+    /// </summary>
+    /// <param name="obj">The target GameObject</param>
+    /// <param name="material">The material to assign</param>
+    public static void SetTextMaterialRecursive(this GameObject obj, Material material) {
+        if (obj == null) return;
+        TextMeshProUGUI[] texts = obj.GetComponentsInChildren<TextMeshProUGUI>(includeInactive: true);
+        foreach (TextMeshProUGUI t in texts) {
+            t.fontMaterial = material;
         }
     }
 
