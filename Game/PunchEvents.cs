@@ -1,7 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 
-namespace NukeLib.Game.Gameplay;
+namespace NukeLib.Game;
 
 /// <summary>
 /// Stuff related to punching

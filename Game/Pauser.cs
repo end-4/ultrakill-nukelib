@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NukeLib.Game.Controls;
+namespace NukeLib.Game;
 
 /// <summary>
 /// For pausing
