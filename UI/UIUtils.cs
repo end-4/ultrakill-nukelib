@@ -58,6 +58,7 @@ public static class UIUtils {
     /// </summary>
     /// <param name="uiObject">The GameObject to update</param>
     public static void UnfuckLayoutHack(this GameObject uiObject) {
+        if (uiObject == null) return;
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)uiObject.transform);
     }
 
