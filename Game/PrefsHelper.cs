@@ -55,6 +55,38 @@ public static class PrefsHelper {
         }
     }
 
+    /// <summary>
+    /// Subscribe to a certain preference change with a parameterless callback
+    /// </summary>
+    /// <param name="key">The key of the preference</param>
+    /// <param name="callback">The registered callback</param>
+    public static void Subscribe(string key, Action callback) {
+        // Discard the arg
+        Action<object?> wrapper = _ => callback();
+
+        _wrappers[(key, callback)] = wrapper;
+
+        if (!_listeners.ContainsKey(key)) {
+            _listeners[key] = _ => { };
+        }
+
+        _listeners[key] += wrapper;
+    }
+
+    /// <summary>
+    /// Unsubscribe from a certain preference change with a parameterless callback
+    /// </summary>
+    /// <param name="key">The key of the preference</param>
+    /// <param name="callback">The registered callback</param>
+    public static void Unsubscribe(string key, Action callback) {
+        if (_wrappers.TryGetValue((key, callback), out var wrapper)) {
+            if (_listeners.ContainsKey(key)) {
+                _listeners[key] -= wrapper;
+            }
+            _wrappers.Remove((key, callback));
+        }
+    }
+
     private static bool _slappedTheBell = false;
 
     private static void SubToPrefsManagerIfNecessary() {
