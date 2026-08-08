@@ -12,8 +12,13 @@ public static class EnemyEvents {
     /// </summary>
     public static event Action<EnemyIdentifier, float> OnDamageTaken;
 
+    /// <summary>
+    /// Event fired when an enemy is spawned. EnemyIdentifier is the enemy
+    /// </summary>
+    public static event Action<EnemyIdentifier> OnSpawn;
+
     [HarmonyPatch(typeof(EnemyIdentifier))]
-    internal static class PunchPatches {
+    internal static class EnemyPatches {
         [HarmonyPrefix]
         [HarmonyPatch("DeliverDamage")]
         private static void DeliverDamage_Prefix(EnemyIdentifier __instance, out float __state) {
@@ -29,6 +34,16 @@ public static class EnemyEvents {
             float damage = __state - newHealth;
             // iirc idols have 999 health. idk if it matters but that amount of damage is unrealistic anyway
             if (damage is > 0 and < 998) OnDamageTaken?.Invoke(__instance, damage);
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Start")]
+        public static void Start_Prefix(EnemyIdentifier __instance) {
+            try {
+                OnSpawn?.Invoke(__instance);
+            } catch (Exception e) {
+                Plugin.Log.LogError($"EnemyIdentifier Start prefix failed: {e}");
+            }
         }
     }
 }
