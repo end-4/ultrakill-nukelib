@@ -13,6 +13,11 @@ public static class SceneUtils {
                  SceneHelper.CurrentScene == "Intro");
     }
 
+    public static bool IsInGame() {
+        return IsSafe() &&
+               SceneHelper.CurrentScene is not ("Main Menu" or "Level 2-S" or "Intermission1" or "Intermission2");
+    }
+
     public static event Action<Scene, LoadSceneMode> SafeSceneLoaded;
     public static event Action SafeSceneLoadedNoParam;
 

@@ -8,6 +8,11 @@ namespace NukeLib;
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 public class Plugin : BaseUnityPlugin {
+    /// <summary>
+    /// The instance of the plugin
+    /// </summary>
+    public static Plugin? Instance;
+
     // Logger
     internal static ManualLogSource Log;
 
@@ -19,6 +24,8 @@ public class Plugin : BaseUnityPlugin {
     public const string PluginVersion = "0.6.0";
 
     private void Awake() {
+        if (Instance != null) return;
+        Instance = this;
         Log = Logger;
 
         Harmony harmony = new Harmony(PluginGUID);
