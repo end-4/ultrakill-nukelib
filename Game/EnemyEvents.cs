@@ -36,13 +36,13 @@ public static class EnemyEvents {
             if (damage is > 0 and < 998) OnDamageTaken?.Invoke(__instance, damage);
         }
 
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        public static void Start_Prefix(EnemyIdentifier __instance) {
+        public static void Start_Postfix(EnemyIdentifier __instance) {
             try {
                 OnSpawn?.Invoke(__instance);
             } catch (Exception e) {
-                Plugin.Log.LogError($"EnemyIdentifier Start prefix failed: {e}");
+                Plugin.Log.LogError($"EnemyIdentifier Start postfix failed: {e}");
             }
         }
     }
