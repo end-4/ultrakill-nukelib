@@ -82,4 +82,18 @@ public static class ColorUtils {
         // }
         return lightness > 0.5 ? Color.black : Color.white;
     }
+
+    /// <summary>
+    /// Blends two colors together using an optional weight ratio.
+    /// </summary>
+    /// <param name="color">The base color.</param>
+    /// <param name="other">The target color to mix in.</param>
+    /// <param name="weight">
+    /// The blend weight between 0.0 and 1.0.
+    /// <c>0.0</c> returns pure base color, <c>0.5</c> returns an equal 50/50 mix, and <c>1.0</c> returns pure target color.
+    /// </param>
+    /// <returns>A new <see cref="Color"/> linearly interpolated between the two inputs.</returns>
+    public static Color Mix(this Color color, Color other, float weight = 0.5f) {
+        return Color.Lerp(color, other, weight);
+    }
 }
