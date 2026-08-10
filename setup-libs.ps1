@@ -1,9 +1,11 @@
 param(
     [Parameter(Mandatory=$false)]
     [string]$UltrakillPath = "C:\Program Files (x86)\Steam\steamapps\common\ULTRAKILL",
+    # Linux: ~/.local/share/Steam/steamapps/common/ULTRAKILL/
 
     [Parameter(Mandatory=$false)]
     [string]$R2ModmanProfilePath = "$env:APPDATA\com.kesomannen.gale\ultrakill\profiles\Default"
+    # Linux: ~/.local/share/com.kesomannen.gale/ultrakill/profiles/Default
 )
 
 Set-StrictMode -Version Latest
