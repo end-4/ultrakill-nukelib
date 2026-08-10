@@ -150,4 +150,30 @@ public static class UIUtils {
 
         return FindRecursive(baseObject, restPath, warnings: warnings);
     }
+
+    /// <summary>
+    /// Recursively prints the full hierarchy tree starting from a given GameObject root.
+    /// </summary>
+    public static void PrintHierarchyTree(this Transform root, string indent = "") {
+        Plugin.Log.LogInfo($"{indent}- {root.name}");
+
+        foreach (Transform child in root) {
+            child.PrintHierarchyTree(indent + "  ");
+        }
+    }
+
+    /// <summary>
+    /// Returns the full hierarchy path of a GameObject (e.g. "Root/Parent/Child").
+    /// </summary>
+    public static string GetFullPath(this GameObject go) {
+        string path = go.name;
+        Transform current = go.transform;
+
+        while (current.parent != null) {
+            current = current.parent;
+            path = $"{current.name}/{path}";
+        }
+
+        return path;
+    }
 }
