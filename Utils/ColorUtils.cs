@@ -96,4 +96,36 @@ public static class ColorUtils {
     public static Color Mix(this Color color, Color other, float weight = 0.5f) {
         return Color.Lerp(color, other, weight);
     }
+
+    /// <summary>
+    /// Converts a hexadecimal uint representation (0xRRGGBB or 0xRRGGBBAA) to a <see cref="Color32"/>.
+    /// </summary>
+    /// <param name="hex">The color value in hex format.</param>
+    /// <returns>A <see cref="Color32"/> corresponding to the hex input.</returns>
+    public static Color32 ToColor32(this uint hex) {
+        if (hex <= 0xFFFFFF) {
+            return new Color32(
+                (byte)((hex >> 16) & 0xFF),
+                (byte)((hex >> 8) & 0xFF),
+                (byte)(hex & 0xFF),
+                255
+            );
+        }
+
+        return new Color32(
+            (byte)((hex >> 24) & 0xFF),
+            (byte)((hex >> 16) & 0xFF),
+            (byte)((hex >> 8) & 0xFF),
+            (byte)(hex & 0xFF)
+        );
+    }
+
+    /// <summary>
+    /// Converts a signed hexadecimal int representation (0xRRGGBB or 0xRRGGBBAA) to a <see cref="Color32"/>.
+    /// </summary>
+    /// <param name="hex">The color value in hex format as an integer.</param>
+    /// <returns>A <see cref="Color32"/> corresponding to the hex input.</returns>
+    public static Color32 ToColor32(this int hex) {
+        return unchecked((uint)hex).ToColor32();
+    }
 }
