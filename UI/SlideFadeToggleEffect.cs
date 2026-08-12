@@ -130,7 +130,7 @@ public static class SlideFadeToggleEffectExtensions {
     /// <param name="hiddenOffset">How much to shift when the GameObject is hidden</param>
     /// <param name="speed">The speed of the hiding/showing animation</param>
     public static void SetActiveAnimated(this GameObject gameObject, bool value, Vector2 hiddenOffset, float speed = 25f) {
-        SlideFadeToggleEffect toggleEffect = gameObject.GetComponent<SlideFadeToggleEffect>();
+        var toggleEffect = gameObject.GetComponent<SlideFadeToggleEffect>();
         if (toggleEffect == null) {
             toggleEffect = gameObject.AddComponent<SlideFadeToggleEffect>();
             toggleEffect.hiddenOffset = hiddenOffset;
@@ -138,11 +138,11 @@ public static class SlideFadeToggleEffectExtensions {
             toggleEffect.OnExitComplete += () => { gameObject.SetActive(false); };
         }
 
-        if (!gameObject.activeSelf) {
+        if (value) {
             gameObject.SetActive(true);
         } else if (toggleEffect != null) {
             toggleEffect.StartExit();
-        } else {
+        } else { // We shouldn't reach this
             gameObject.SetActive(false);
         }
     }
