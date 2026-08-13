@@ -24,8 +24,10 @@ public static class SceneUtils {
     private static void CheckScene(Scene scene, LoadSceneMode mode) {
         try {
             if (!IsSafe()) return;
-            SafeSceneLoaded?.Invoke(scene, mode);
-            SafeSceneLoadedNoParam?.Invoke();
+            ExecutionUtils.RunNextFrame(() => {
+                SafeSceneLoaded?.Invoke(scene, mode);
+                SafeSceneLoadedNoParam?.Invoke();
+            });
         } catch (Exception e) {
             Plugin.Log.LogError($"Error on scene load (most likely caused by mods that depend on NukeLib): {e}");
         }
