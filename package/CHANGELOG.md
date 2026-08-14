@@ -8,8 +8,10 @@
 - Added optional warnings and null-annotated UIUtils.FindRecursive
 - Added parry event listening
 - Added a simple fuzzy search implementation
-- Added ColorUtils.GetWeaponVariantColor, ColorUtils.GetContrastedColor
+- Added ColorUtils.GetWeaponVariantColor, ColorUtils.GetContrastedColor, conversion from hex
 - Added UIUtils.SetImageMaterialRecursive, UIUtils.SetTextMaterialRecursive and UIUtils.SetLayerRecursive
+- Added delayed scene load events
+- Added GunHelper, FinalRankHelper, and maybe some more stuff I forgor
 
 ## 0.5.0
 
