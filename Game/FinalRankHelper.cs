@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using NukeLib.Utils;
 
@@ -6,6 +7,11 @@ namespace NukeLib.Game;
 
 public static class FinalRankHelper {
     public static List<string> ExtraInfoLines = [];
+
+    /// <summary>
+    /// Event fired when the final rank screen is shown
+    /// </summary>
+    public static event Action? RankShown;
 
     static FinalRankHelper() {
         SceneUtils.SafeSceneLoadedNoParam += ResetInfo;
@@ -30,8 +36,13 @@ public static class FinalRankHelper {
         [HarmonyPostfix]
         [HarmonyPatch("SetInfo")]
         private static void SetInfo_Postfix(FinalRank __instance) {
-            string joined = ExtraInfoLines.Join(delimiter: "\n") + "\n";
-            __instance.extraInfo.text += joined;
+            try {
+                string joined = ExtraInfoLines.Join(delimiter: "\n") + "\n";
+                __instance.extraInfo.text += joined;
+                RankShown?.Invoke();
+            } catch (Exception e) {
+                Plugin.Log.LogError(e);
+            }
         }
     }
 }
