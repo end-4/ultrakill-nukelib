@@ -128,4 +128,22 @@ public static class ColorUtils {
     public static Color32 ToColor32(this int hex) {
         return unchecked((uint)hex).ToColor32();
     }
+
+    /// <summary>
+    /// Converts a hexadecimal uint representation (0xRRGGBB or 0xRRGGBBAA) to a <see cref="Color"/>.
+    /// </summary>
+    /// <param name="hex">The color value in hex format.</param>
+    /// <returns>A <see cref="Color"/> corresponding to the hex input.</returns>
+    public static Color ToColor(this uint hex) {
+        return hex.ToColor32();
+    }
+
+    /// <summary>
+    /// Converts a signed hexadecimal int representation (0xRRGGBB or 0xRRGGBBAA) to a <see cref="Color"/>.
+    /// </summary>
+    /// <param name="hex">The color value in hex format as an integer.</param>
+    /// <returns>A <see cref="Color"/> corresponding to the hex input.</returns>
+    public static Color ToColor(this int hex) {
+        return hex.ToColor32();
+    }
 }
