@@ -1,3 +1,7 @@
+## 0.7.0
+
+- Added more reflection utils for executing without throwing
+
 ## 0.6.0
 
 - Added extension KeyCode.IsModifier
