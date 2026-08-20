@@ -48,4 +48,52 @@ public static class TextUtils {
 
         return result.ToString();
     }
+
+    /// <summary>
+    /// Adds a tag to a certain string. Examples:
+    /// * Tag("Schism", "Duped") -> "Schism [Duped]"
+    /// * Tag("Schism [Duped] [Resized]", "Duped") -> "Schism [Duped] [Resized]"
+    /// * Tag("Schism [Duped] [Resized]", "Supercharged") -> "Schism [Duped] [Resized] [Supercharged]"
+    /// </summary>
+    /// <param name="text">The base text</param>
+    /// <param name="tag">The tag name, without square brackets</param>
+    /// <returns>The base text with the tag</returns>
+    public static string Tag(this string text, string tag) {
+        if (string.IsNullOrWhiteSpace(text)) return $"[{tag}]"; // Edging
+        string pattern = $@"\[\s*{Regex.Escape(tag)}\s*\]";
+        if (Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase)) {
+            return text;
+        }
+
+        return $"{text.Trim()} [{tag}]";
+    }
+
+    /// <summary>
+    /// Removes a tag from a certain string. Examples:
+    /// * Untag("Schism [Duped] [Resized] [Supercharged]", "Duped") -> "Schism [Resized] [Supercharged]"
+    /// * Untag("Schism [Duped] [Resized]", "Arson") -> "Schism [Duped] [Resized]"
+    /// </summary>
+    /// <param name="text">The text that might have the tag</param>
+    /// <param name="tag">The tag name, without square brackets</param>
+    /// <returns>The text without the tag</returns>
+    public static string Untag(this string text, string tag) {
+        if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+        string pattern = $@"\s*\[\s*{Regex.Escape(tag)}\s*\]";
+        string result = Regex.Replace(text, pattern, string.Empty, RegexOptions.IgnoreCase);
+        return Regex.Replace(result.Trim(), @"\s+", " ");
+    }
+
+    /// <summary>
+    /// Check whether a string has a certain tag
+    /// </summary>
+    /// <param name="text">The string</param>
+    /// <param name="tag">The tag to check, without square brackets</param>
+    /// <returns>True if the tag is in the string, false otherwise</returns>
+    public static bool HasTag(this string text, string tag) {
+        if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(tag))
+            return false;
+
+        string pattern = $@"\[\s*{Regex.Escape(tag)}\s*\]";
+        return Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
+    }
 }
