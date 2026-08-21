@@ -1,6 +1,7 @@
 ## 0.7.0
 
 - Added more reflection utils for executing without throwing
+- Added string tagging utils
 
 ## 0.6.0
 
