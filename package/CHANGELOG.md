@@ -1,3 +1,7 @@
+## 0.8.0
+
+- Added TextUtils.GetHashIndex
+
 ## 0.7.0
 
 - Added more reflection utils for executing without throwing

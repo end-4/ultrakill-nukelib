@@ -3,7 +3,15 @@
 namespace NukeLib.Game;
 
 public static class GunHelper {
+    /// <summary>
+    /// Gets the variation of a weapon, given its gameObject and slot index
+    /// </summary>
+    /// <param name="weapon">The weapon</param>
+    /// <param name="weaponIndex">The slot index, starting with 0 being revolver</param>
+    /// <returns>The variation index. 0 = Blue; 1 = Green; 2 = Red</returns>
     public static int GetVariation(GameObject weapon, int weaponIndex) {
+        // This is not very clean, but the game gives us no choice
+        // Reference + "I've seen worse": https://github.com/daemon251/Ultrakill-WeaponVariantBinds/blob/580ecf6f0e150495639bcaec6ee5f48193b76bed/PluginConfig.cs#L219
         int currVariant = -1;
         switch (weaponIndex) {
             case 0:
@@ -33,6 +41,7 @@ public static class GunHelper {
                 if (rocComp != null) currVariant = rocComp.variation;
                 break;
         }
+
         return currVariant;
     }
 }

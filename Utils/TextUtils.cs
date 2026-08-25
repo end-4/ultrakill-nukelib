@@ -96,4 +96,25 @@ public static class TextUtils {
         string pattern = $@"\[\s*{Regex.Escape(tag)}\s*\]";
         return Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
     }
+
+    /// <summary>
+    /// Get a hashed index in range [0, length) given a string and limit length
+    /// </summary>
+    /// <param name="str">The input string</param>
+    /// <param name="length">Exclusive upper bound for the index</param>
+    /// <returns>The index in range [0, length)</returns>
+    public static int GetHashIndex(string str, int length) {
+        if (string.IsNullOrEmpty(str) || length <= 0) {
+            return 0;
+        }
+
+        uint hash = 5381;
+        foreach (char c in str) {
+            // hash * 33 + char
+            hash = ((hash << 5) + hash) + c;
+        }
+
+        // Force non-negative and constrain to [0, length)
+        return (int)(hash & 0x7FFFFFFF) % length;
+    }
 }
