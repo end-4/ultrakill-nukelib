@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BepInEx;
 using GameConsole.pcon;
 using NukeLib.Text;
 using UnityEngine;
@@ -17,6 +19,7 @@ public class EnemyIconController : MonoBehaviour {
     private static bool vanillaIconsLoaded = false;
     private static readonly string BundlePath = Path.Combine(Plugin.workingDir, "assets", "nukelib_enemies.bundle");
     private static string DEFAULT_ICON = "default";
+
     /// <summary>
     /// The icons style
     /// </summary>
@@ -30,6 +33,7 @@ public class EnemyIconController : MonoBehaviour {
         /// Clean vector style optimized for viewing at small scale
         /// </summary>
         Simple,
+
         /// <summary>
         /// Literal screenshot style used in vanilla spawner arm menu
         /// </summary>
@@ -101,6 +105,7 @@ public class EnemyIconController : MonoBehaviour {
 
     public EnemyIdentifier enemyIdentifier;
     public EnemyType enemyType;
+    public string enemyName;
 
     private void Awake() {
         if (style == IconStyle.Simple && !iconsLoaded) {
@@ -116,6 +121,36 @@ public class EnemyIconController : MonoBehaviour {
         SetEnemyIcon();
     }
 
+    private static string NormalizeEnemyName(string name) {
+        return name.ToLower().Replace(" ", "_");
+    }
+
+    private static string GuessIconFromName(string name) {
+        if (name.IsNullOrWhiteSpace()) return string.Empty;
+        string nameLower = name.ToLower();
+        var normalized = NormalizeEnemyName(nameLower);
+
+        if (nameLower.StartsWith("sisyphean")) return "sisyphus";
+        if (nameLower.StartsWith("sentry")) return "turret";
+        if (nameLower.StartsWith("earthmover mortar")) return "centaur_mortar";
+        if (nameLower.StartsWith("earthmover rocket launcher")) return "centaur_rocket";
+        if (nameLower.StartsWith("earthmover tower")) return "centaur_orb";
+        if (nameLower.StartsWith("<s>minotaur")) return "minotaur";
+        if (nameLower.StartsWith("mysterious druid knight")) return "mandalore";
+        if (nameLower.StartsWith("???")) return "puppet";
+        if (nameLower.StartsWith("minos prime")) return "minos_prime";
+
+        // We loop backwards so longer names get checked first
+        for (int i = IconNames.Length - 1; i >= 0; i--) {
+            var iconName = IconNames[i];
+            if (iconName == "sisyphus") continue;
+            var unNormalized = iconName.Replace("_", " ");
+            if (nameLower.StartsWith(unNormalized)) return iconName;
+        }
+
+        return EnemyIcons.ContainsKey(normalized) ? normalized : string.Empty;
+    }
+
     private void SetEnemyIcon() {
         // Vanilla icons
         if (style == IconStyle.Vanilla) {
@@ -126,24 +161,20 @@ public class EnemyIconController : MonoBehaviour {
             })?.gridIcon;
             return;
         }
+
         // Custom icons
         string enemyTypeId = (enemyIdentifier != null) ? enemyIdentifier.enemyType.ToString() : enemyType.ToString();
         string iconName = DEFAULT_ICON;
         string potentialIconName = enemyTypeId.ToSnakeCase();
         if (EnemyIcons.ContainsKey(potentialIconName)) {
             iconName = potentialIconName;
-        } else if (enemyIdentifier != null) {
-            string fullNameLower = enemyIdentifier.FullName.ToLower();
-            // Plugin.Log.LogInfo($"full name {fullName}");
-            if (fullNameLower == "earthmover mortar") potentialIconName = "centaur_mortar";
-            else if (fullNameLower == "earthmover rocket launcher") potentialIconName = "centaur_rocket";
-            else if (fullNameLower == "earthmover tower") potentialIconName = "centaur_orb";
-            else if (fullNameLower == "cancerous rodent") potentialIconName = "cancerous_rodent";
-            else if (fullNameLower == "very cancerous rodent") potentialIconName = "very_cancerous_rodent";
-            else if (fullNameLower == "big johninator") potentialIconName = "big_johninator";
-            if (EnemyIcons.ContainsKey(potentialIconName)) {
-                iconName = potentialIconName;
-            }
+        }
+        if (iconName == DEFAULT_ICON) {
+            // Guess
+            var guessed1 = GuessIconFromName(enemyIdentifier?.FullName.ToLower() ?? "");
+            if (!guessed1.IsNullOrWhiteSpace() && EnemyIcons.ContainsKey(guessed1)) iconName = guessed1;
+            var guessed2 = GuessIconFromName(enemyName);
+            if (!guessed2.IsNullOrWhiteSpace() && EnemyIcons.ContainsKey(guessed2)) iconName = guessed2;
         }
 
         if (EnemyIcons.TryGetValue(iconName, out Sprite icon)) {

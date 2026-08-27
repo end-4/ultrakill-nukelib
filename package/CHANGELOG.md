@@ -1,6 +1,7 @@
 ## 0.8.0
 
 - Added TextUtils.GetHashIndex
+- EnemyIconController: add guessing from name
 
 ## 0.7.0
 
