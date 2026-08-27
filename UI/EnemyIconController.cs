@@ -127,7 +127,7 @@ public class EnemyIconController : MonoBehaviour {
 
     private static string GuessIconFromName(string name) {
         if (name.IsNullOrWhiteSpace()) return string.Empty;
-        string nameLower = name.ToLower();
+        string nameLower = name.ToLower().Replace("_", " ");
         var normalized = NormalizeEnemyName(nameLower);
 
         if (nameLower.StartsWith("sisyphean")) return "sisyphus";
@@ -139,6 +139,9 @@ public class EnemyIconController : MonoBehaviour {
         if (nameLower.StartsWith("mysterious druid knight")) return "mandalore";
         if (nameLower.StartsWith("???")) return "puppet";
         if (nameLower.StartsWith("minos prime")) return "minos_prime";
+        if (nameLower.StartsWith("big john")) return "big_johninator";
+        if (nameLower.StartsWith("v2")) return "v2";
+        if (nameLower.StartsWith("centaur")) return "centaur_rocket"; // For now...
 
         // We loop backwards so longer names get checked first
         for (int i = IconNames.Length - 1; i >= 0; i--) {
@@ -171,6 +174,8 @@ public class EnemyIconController : MonoBehaviour {
         }
         if (iconName == DEFAULT_ICON) {
             // Guess
+            var guessed0 = GuessIconFromName(enemyTypeId);
+            if (!guessed0.IsNullOrWhiteSpace() && EnemyIcons.ContainsKey(guessed0)) iconName = guessed0;
             var guessed1 = GuessIconFromName(enemyIdentifier?.FullName.ToLower() ?? "");
             if (!guessed1.IsNullOrWhiteSpace() && EnemyIcons.ContainsKey(guessed1)) iconName = guessed1;
             var guessed2 = GuessIconFromName(enemyName);
