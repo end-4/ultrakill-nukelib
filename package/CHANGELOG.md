@@ -1,3 +1,8 @@
+## 0.9.0
+
+- Added StyleHelper
+- Added text conversion to Title Case and Sentence case
+
 ## 0.8.0
 
 - Added TextUtils.GetHashIndex

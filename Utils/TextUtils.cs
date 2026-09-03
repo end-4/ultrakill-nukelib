@@ -4,6 +4,11 @@ using System.Text.RegularExpressions;
 namespace NukeLib.Utils;
 
 public static class TextUtils {
+    /// <summary>
+    /// Converts text to snake_case
+    /// </summary>
+    /// <param name="input">Input text</param>
+    /// <returns>The resulting snake_case text</returns>
     public static string ToSnakeCase(this string input) {
         if (string.IsNullOrEmpty(input)) {
             return input;
@@ -11,6 +16,34 @@ public static class TextUtils {
 
         string result = Regex.Replace(input, @"(?<!^)(?=[A-Z][a-z])|(?<=[a-z0-9])(?=[A-Z])", "_");
         return result.ToLowerInvariant();
+    }
+
+    /// <summary>
+    /// Converts text to Sentence case.
+    /// </summary>
+    /// <param name="input">Input text</param>
+    /// <returns>The resulting Sentence case text</returns>
+    public static string ToSentenceCase(this string input) {
+        if (string.IsNullOrEmpty(input)) {
+            return input;
+        }
+
+        string result = Regex.Replace(input, @"(?<!^)(?=[A-Z][a-z])|(?<=[a-z0-9])(?=[A-Z])", " ");
+        result = result.ToLowerInvariant();
+        return char.ToUpperInvariant(result[0]) + result[1..];
+    }
+
+    /// <summary>
+    /// Converts text to Title Case (like "camelCaseString" -> "Camel Case String")
+    /// </summary>
+    /// <param name="input">Input text</param>
+    /// <returns>The resulting Title Case text</returns>
+    public static string ToTitleCase(this string input) {
+        if (string.IsNullOrEmpty(input)) {
+            return input;
+        }
+        string result = Regex.Replace(input, @"(?<!^)(?=[A-Z][a-z])|(?<=[a-z0-9])(?=[A-Z])", " ");
+        return Regex.Replace(result, @"\b\w", m => m.Value.ToUpperInvariant());
     }
 
     /// <summary>
@@ -108,6 +141,7 @@ public static class TextUtils {
             return 0;
         }
 
+        // The algorithm is called djb2
         uint hash = 5381;
         foreach (char c in str) {
             // hash * 33 + char
