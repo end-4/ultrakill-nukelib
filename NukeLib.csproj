@@ -9,7 +9,7 @@
         <DebugType>embedded</DebugType>
         <Deterministic>true</Deterministic>
         <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))</RepoRoot>
-        <PathMap>$(RepoRoot)=/_/</PathMap>
+        <PathMap>$(RepoRoot)=src/</PathMap>
     </PropertyGroup>
 
     <ItemGroup>
