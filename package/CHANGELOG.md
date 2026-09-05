@@ -1,3 +1,7 @@
+## 0.10.0
+
+- Added PortalHelper which keeps track of active portals
+
 ## 0.9.0
 
 - Added StyleHelper
