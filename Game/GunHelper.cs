@@ -13,6 +13,7 @@ public static class GunHelper {
         // This is not very clean, but the game gives us no choice
         // Reference + "I've seen worse": https://github.com/daemon251/Ultrakill-WeaponVariantBinds/blob/580ecf6f0e150495639bcaec6ee5f48193b76bed/PluginConfig.cs#L219
         int currVariant = -1;
+        if (weapon == null) return -1;
         switch (weaponIndex) {
             case 0:
                 var rComp = weapon.GetComponent<Revolver>();

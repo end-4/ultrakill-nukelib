@@ -1,6 +1,7 @@
 ## 0.10.0
 
 - Added PortalHelper which keeps track of active portals
+- Fixed weapon null reference exception in GunHelper
 
 ## 0.9.0
 
