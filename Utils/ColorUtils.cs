@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace NukeLib.Utils;
@@ -393,23 +393,69 @@ public static class ColorUtils {
     }
 
     /// <summary>
-    /// Converts OKLCH coordinates (L, C, H in range [0, 1]) to an sRGB <see cref="Color"/>.
+    /// Checks whether a linear sRGB coordinate is within the sRGB gamut within an epsilon tolerance.
+    /// </summary>
+    private static bool IsInSrgbGamut(Vector3 rgbLinear, float epsilon = 0.0001f) {
+        return rgbLinear.x >= -epsilon && rgbLinear.x <= 1f + epsilon &&
+               rgbLinear.y >= -epsilon && rgbLinear.y <= 1f + epsilon &&
+               rgbLinear.z >= -epsilon && rgbLinear.z <= 1f + epsilon;
+    }
+
+    /// <summary>
+    /// Converts OKLCH coordinates (L, C, H in range [0, 1]) to an sRGB <see cref="Color"/>
+    /// using constant-hue chroma reduction gamut mapping.
     /// </summary>
     /// <param name="oklch">The OKLCH vector where x = Lightness [0, 1], y = Chroma [0, ~0.4], z = Hue [0, 1).</param>
     /// <param name="alpha">Optional alpha transparency [0, 1]. Default is 1.</param>
-    /// <returns>The resulting sRGB <see cref="Color"/> with channels clamped to [0, 1].</returns>
+    /// <returns>The resulting sRGB <see cref="Color"/>.</returns>
     public static Color OklchToRgb(Vector3 oklch, float alpha = 1f) {
-        Vector3 oklab = OklchToOklab(oklch);
-        Vector3 xyz = OklabToXyz(oklab);
-        Vector3 rgbLinear = XyzToRgbLinear(xyz);
-        Vector3 rgb = SrgbLinearToRgb(rgbLinear);
+        float l = oklch.x;
+        float c = oklch.y;
+        float h = oklch.z;
+
+        // Boundary conditions for pure black / white or out-of-range lightness
+        if (l >= 1f) return new Color(1f, 1f, 1f, Mathf.Clamp01(alpha));
+        if (l <= 0f) return new Color(0f, 0f, 0f, Mathf.Clamp01(alpha));
+
+        Vector3 rgbLinear = XyzToRgbLinear(OklabToXyz(OklchToOklab(new Vector3(l, c, h))));
+
+        // If the color is already inside the sRGB gamut, convert directly
+        if (IsInSrgbGamut(rgbLinear)) {
+            Vector3 rgb = SrgbLinearToRgb(rgbLinear);
+            return new Color(
+                Mathf.Clamp01(rgb.x),
+                Mathf.Clamp01(rgb.y),
+                Mathf.Clamp01(rgb.z),
+                Mathf.Clamp01(alpha)
+            );
+        }
+
+        // Gamut mapping: binary search to find the maximum Chroma at constant L and H that fits in sRGB
+        float low = 0f;
+        float high = c;
+        Vector3 bestRgbLinear = rgbLinear;
+
+        // 16 iterations gives precision of original Chroma / 2^16 (< 0.00001)
+        for (int i = 0; i < 16; i++) {
+            float mid = (low + high) * 0.5f;
+            Vector3 testLinear = XyzToRgbLinear(OklabToXyz(OklchToOklab(new Vector3(l, mid, h))));
+            if (IsInSrgbGamut(testLinear)) {
+                bestRgbLinear = testLinear;
+                low = mid;
+            } else {
+                high = mid;
+            }
+        }
+
+        Vector3 mappedRgb = SrgbLinearToRgb(bestRgbLinear);
         return new Color(
-            Mathf.Clamp01(rgb.x),
-            Mathf.Clamp01(rgb.y),
-            Mathf.Clamp01(rgb.z),
+            Mathf.Clamp01(mappedRgb.x),
+            Mathf.Clamp01(mappedRgb.y),
+            Mathf.Clamp01(mappedRgb.z),
             Mathf.Clamp01(alpha)
         );
     }
+
 
     /// <summary>
     /// Converts OKLCH coordinates (L, C, H in range [0, 1]) to an sRGB <see cref="Color"/>.
@@ -457,4 +503,30 @@ public static class ColorUtils {
     }
 
     /// <summary>
+    /// Converts OKLCH color space values (normalized [0-1]) to a Unity RGB Color.
+    /// </summary>
+    /// <param name="L">Lightness in range [0, 1].</param>
+    /// <param name="C">Chroma (typically [0, ~0.4]).</param>
+    /// <param name="H">Hue in range [0, 1)</param>
+    /// <param name="alpha">Alpha channel [0, 1]</param>
+    public static Color OKLCHToRGB(float L, float C, float H, float alpha = 1f) {
+        return OklchToRgb(new Vector3(L, C, H), alpha);
+    }
+
+    /// <summary>
+    /// Converts Unity RGB Color to OKLCH values
+    /// </summary>
+    /// <param name="rgbColor">The RGB color</param>
+    /// <param name="L">Lightness in range [0, 1].</param>
+    /// <param name="C">Chroma (typically [0, ~0.4]).</param>
+    /// <param name="H">Hue in range [0, 1)</param>
+    public static void RGBToOKLCH(this Color rgbColor, out float L, out float C, out float H) {
+        var oklch = RgbToOklch(rgbColor);
+        L = oklch.x;
+        C = oklch.y;
+        H = oklch.z;
+    }
+
+    #endregion
 }
+
