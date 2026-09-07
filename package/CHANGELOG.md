@@ -1,7 +1,7 @@
 ## 0.10.0
 
 - Added PortalHelper which keeps track of active portals
-- Fixed weapon null reference exception in GunHelper
+- GunHelper: Fixed a weapon null reference exception, added a new GetVariation that doesn't require a slot index
 
 ## 0.9.0
 
