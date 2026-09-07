@@ -60,7 +60,6 @@ public static class GunHelper {
         if (weapon == null) return -1;
         var weaponIconComp = weapon.GetComponent<WeaponIcon>();
         if (weaponIconComp == null) return -1;
-        var weaponIcon = weaponIconComp.weaponDescriptor.icon;
         return (int)weaponIconComp.weaponDescriptor.variationColor;
     }
 }
