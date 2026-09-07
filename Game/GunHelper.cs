@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace NukeLib.Game;
 
+/// <summary>
+/// Class that contains convenience functions for dealing with weapons
+/// </summary>
 public static class GunHelper {
     /// <summary>
     /// Gets the variation of a weapon, given its gameObject and slot index
@@ -9,6 +13,7 @@ public static class GunHelper {
     /// <param name="weapon">The weapon</param>
     /// <param name="weaponIndex">The slot index, starting with 0 being revolver</param>
     /// <returns>The variation index. 0 = Blue; 1 = Green; 2 = Red</returns>
+    [Obsolete]
     public static int GetVariation(GameObject weapon, int weaponIndex) {
         // This is not very clean, but the game gives us no choice
         // Reference + "I've seen worse": https://github.com/daemon251/Ultrakill-WeaponVariantBinds/blob/580ecf6f0e150495639bcaec6ee5f48193b76bed/PluginConfig.cs#L219
@@ -44,5 +49,18 @@ public static class GunHelper {
         }
 
         return currVariant;
+    }
+
+    /// <summary>
+    /// Gets the variation of a weapon, given its GameObject
+    /// </summary>
+    /// <param name="weapon">The weapon's GameObject</param>
+    /// <returns>The variation index. 0 = Blue; 1 = Green; 2 = Red</returns>
+    public static int GetVariation(GameObject weapon) {
+        if (weapon == null) return -1;
+        var weaponIconComp = weapon.GetComponent<WeaponIcon>();
+        if (weaponIconComp == null) return -1;
+        var weaponIcon = weaponIconComp.weaponDescriptor.icon;
+        return (int)weaponIconComp.weaponDescriptor.variationColor;
     }
 }
