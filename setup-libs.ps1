@@ -36,6 +36,7 @@ $ukDlls = @(
     "Unity.TextMeshPro.dll"
     "UnityEngine.dll"
     "UnityEngine.AssetBundleModule.dll"
+    "UnityEngine.AudioModule.dll"
     "UnityEngine.ImageConversionModule.dll"
     "UnityEngine.CoreModule.dll"
     "UnityEngine.UI.dll"

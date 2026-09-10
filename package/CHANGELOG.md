@@ -1,3 +1,7 @@
+## 0.10.1
+
+- Made Pauser pause sounds
+
 ## 0.10.0
 
 - Added PortalHelper which keeps track of active portals

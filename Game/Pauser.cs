@@ -22,6 +22,11 @@ public static class Pauser {
             GameStateManager.Instance.RegisterState(pauseState);
             Time.timeScale = 0f;
             if (GunControl.Instance != null) GunControl.Instance.activated = false;
+            if (AudioMixerController.Instance != null) {
+                AudioMixerController.Instance.allSound.SetFloat("allPitch", 0f);
+                AudioMixerController.Instance.doorSound.SetFloat("allPitch", 0f);
+            }
+            if (MusicManager.Instance != null) MusicManager.Instance.FilterMusic();
         } else {
             GameStateManager.Instance.PopState(pauseKey);
             // Edge case: un-pausing on title screen is very weird
