@@ -46,6 +46,9 @@
       <Reference Include="UnityEngine.ImageConversionModule">
         <HintPath>libs\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>libs\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
       <Reference Include="UnityEngine.UI">
         <HintPath>libs\Managed\UnityEngine.UI.dll</HintPath>
       </Reference>

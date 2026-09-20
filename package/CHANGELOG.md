@@ -1,6 +1,10 @@
-## 0.10.1
+## 0.11.0
 
 - Made Pauser pause sounds
+- Added FreeDragHandler and TitlebarDragHandler
+- Added ClickHandler
+- Added ResizeController
+- Added FileUtils.GetPathItems
 
 ## 0.10.0
 
