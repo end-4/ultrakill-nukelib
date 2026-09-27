@@ -1,3 +1,7 @@
+## 0.12.0
+
+- Added LRUCache
+
 ## 0.11.0
 
 - Made Pauser pause sounds
