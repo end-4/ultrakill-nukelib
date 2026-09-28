@@ -9,7 +9,7 @@ namespace NukeLib.Utils;
 /// <typeparam name="TKey">The cache key type</typeparam>
 /// <typeparam name="TValue">The cache value type</typeparam>
 public class LRUCache<TKey, TValue> where TKey : notnull {
-    private readonly int _capacity;
+    private int _maxSize;
     private readonly Dictionary<TKey, LinkedListNode<CacheItem>> _map;
     private readonly LinkedList<CacheItem> _list;
     private readonly Action<TValue>? _onRemoved;
@@ -26,16 +26,41 @@ public class LRUCache<TKey, TValue> where TKey : notnull {
     }
 
     /// <summary>
+    /// Size of the cache
+    /// </summary>
+    public int MaxSize {
+        get => _maxSize;
+        set {
+            if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value), "Max size must be greater than zero.");
+            lock (_lock) {
+                _maxSize = value;
+                Trim();
+            }
+        }
+    }
+
+    private void Trim() {
+        while (_map.Count > _maxSize) {
+            var last = _list.Last;
+            if (last == null) break;
+
+            _list.RemoveLast();
+            _map.Remove(last.Value.Key);
+            _onRemoved?.Invoke(last.Value.Value);
+        }
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="LRUCache{TKey, TValue}"/> class.
     /// </summary>
-    /// <param name="capacity">Maximum capacity of the cache</param>
+    /// <param name="maxSize">Max size of the cache</param>
     /// <param name="onRemoved">Optional callback invoked when an item is removed</param>
-    /// <exception cref="ArgumentOutOfRangeException">When capacity is negative</exception>
-    public LRUCache(int capacity, Action<TValue>? onRemoved = null) {
-        if (capacity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be greater than zero.");
-        _capacity = capacity;
-        _map = new Dictionary<TKey, LinkedListNode<CacheItem>>(capacity);
+    /// <exception cref="ArgumentOutOfRangeException">When max size is negative</exception>
+    public LRUCache(int maxSize, Action<TValue>? onRemoved = null) {
+        if (maxSize <= 0)
+            throw new ArgumentOutOfRangeException(nameof(maxSize), "Max size must be greater than zero.");
+        _maxSize = maxSize;
+        _map = new Dictionary<TKey, LinkedListNode<CacheItem>>(maxSize);
         _list = new LinkedList<CacheItem>();
         _onRemoved = onRemoved;
     }
@@ -69,18 +94,13 @@ public class LRUCache<TKey, TValue> where TKey : notnull {
                 _list.Remove(existingNode);
                 _onRemoved?.Invoke(existingNode.Value.Value);
                 _map.Remove(key);
-            } else if (_map.Count >= _capacity) {
-                var last = _list.Last;
-                if (last != null) {
-                    _list.RemoveLast();
-                    _map.Remove(last.Value.Key);
-                    _onRemoved?.Invoke(last.Value.Value);
-                }
             }
 
             var newItem = new CacheItem(key, value);
             var newNode = _list.AddFirst(newItem);
             _map[key] = newNode;
+
+            Trim();
         }
     }
 
